@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class UsersController extends Controller
 {
@@ -14,18 +15,9 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $users = User::getAll();
-
-        $getUsers = [];
-        foreach ($users as $user) {
-            $id = $user->id();
-            $getUsers[] = [
-                'id' => $id,
-                'data' => $user->data()
-            ];
-        }
-
-        return response()->json($getUsers);
+        $user = new User();
+        $users = $user->getAll();
+        return $users;
     }
 
     /**
@@ -39,34 +31,48 @@ class UsersController extends Controller
     {
         $data = $request->all();
 
-        $request->validate([
+        $validator =  Validator::make($request->all(),[
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:25',
             'password' => 'required|string',
             'uniq_id' => 'required|string'
         ]);
 
-        $user = User::create($data);
-        if ($user) {
-            return response()->json($user);
+        if($validator->fails()){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'validation faild',
+                'data' => $validator->errors()
+            ], 400);
         }
-        return response()->json(['error' => 'Something went wrong'], 500);
+        else{
+            $user = new User();
+            $createUser = $user->create($data);
+        }
+        if ($createUser)
+            return response()->json(['success' => true, 'data' => $createUser], 200);
+        else
+            return response()->json(['error' => 'Something went wrong'], 500);
     }
 
     /**
-     * Display the specified resource.
+     * Display the user resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        $user = User::find($id);
-        return response()->json($user->data);
+        $user = new User();
+        $user = $user->find($id);
+        if ($user)
+            return $user;
+        else
+            return response()->json(['error' => 'User not found'], 404);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the user resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -74,17 +80,34 @@ class UsersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $data = $request->all();
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'phone' => 'required|string|max:25',
+            'password' => 'required|string',
+            'uniq_id' => 'required|string'
+        ]);
+        $user = new User();
+        $updateUser = $user->edit($id, $data);
+        if ($updateUser)
+            return $updateUser;
+        else
+            return response()->json(['error' => 'Something went wrong'], 500);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * get all payments of user
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function payments($id)
     {
-        //
+        $user = new User();
+        $payments = $user->payments($id);
+        if ($payments)
+            return $payments;
+        else
+            return response()->json(['error' => 'User not found'], 404);
     }
 }

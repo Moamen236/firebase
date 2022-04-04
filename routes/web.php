@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
 use Kreait\Laravel\Firebase\Facades\Firebase;
@@ -18,7 +19,7 @@ use Illuminate\Support\Facades\Hash;
 */
 
 Route::get('/', function () {
-    // return view('welcome');
+    return view('welcome');
     // $defaultAuth = Firebase::auth();
     // $defaultMessaging = Firebase::messaging();
     // $defaultDynamicLinks = Firebase::dynamicLinks();
@@ -33,7 +34,7 @@ Route::get('/', function () {
     //     'gender' => 'male'
     // ]);
 
-    $firestore = new FirestoreClient();
+    // $firestore = new FirestoreClient();
 
     // $collectionReference = $firestore->collection('users');
     // $documents = $collectionReference->documents();
@@ -78,10 +79,14 @@ Route::get('/', function () {
     // // $payments = $user->payments;
     // dd($user);
 
-    $password = hash('sha256', 'SlccC3BP2XDMjtaWi6qO$011');
-    $id = uniqid();
-    dd($password , $id);
+    // $password = hash('sha256', 'SlccC3BP2XDMjtaWi6qO$011');
+    // $id = uniqid();
+    // dd($password , $id);
 });
+
+Route::post('/register', [AuthController::class, 'register'])->name('register');
+Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/generate', [AuthController::class, 'generate'])->name('generate');
 
 
 // Route::get('/users' , [ UsersController::class, 'index' ]);

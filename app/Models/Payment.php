@@ -10,15 +10,23 @@ class Payment extends Model
 {
     use HasFactory;
 
-    public static function get()
+    public $firstore;
+    public $collection;
+    public $documents;
+
+    public function __construct()
     {
-        $firestore = new FirestoreClient();
-        $collectionReference = $firestore->collection('payments');
-        $documents = $collectionReference->documents()->rows();
-        return $documents;
+        $this->firstore = new FirestoreClient();
+        $this->collection = $this->firstore->collection('payments');
+        $this->documents = $this->collection->documents()->rows();
     }
 
-    public static function find($id)
+    public function getAll()
+    {
+        return $this->documents;
+    }
+
+    public function find($id)
     {
         $firestore = new FirestoreClient();
         $collectionReference = $firestore->collection('payments');
@@ -26,7 +34,7 @@ class Payment extends Model
         return $document;
     }
 
-    public static function create($data)
+    public function create($data)
     {
         $firestore = new FirestoreClient();
         $collectionReference = $firestore->collection('payments');
@@ -34,7 +42,7 @@ class Payment extends Model
         return $document->snapshot();
     }
 
-    public static function updateCollection($id, $data)
+    public function updateCollection($id, $data)
     {
         $firestore = new FirestoreClient();
         $collectionReference = $firestore->collection('payments');
