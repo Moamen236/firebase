@@ -133,9 +133,10 @@
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-body p-4">
-                            <h4 class="card-title">Register</h4>
+                            <h4 class="card-title">Register User</h4>
                             <form action="{{ route('register') }}" method="POST">
                                 @csrf
+                                <input type="hidden" name="type" value="user">
                                 <div class="mb-3">
                                     <label for="nameInput" class="form-label">Name</label>
                                     <input type="text" name="name" class="form-control" id="nameInput">
@@ -159,11 +160,52 @@
                     </div>
                 </div>
                 <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body p-4">
+                            <h4 class="card-title">Register Company</h4>
+                            <form action="{{ route('register') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="type" value="company">
+                                <div class="mb-3">
+                                    <label for="nameInput" class="form-label">Name</label>
+                                    <input type="text" name="name" class="form-control" id="nameInput">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="emailInput" class="form-label">Email</label>
+                                    <input type="eamil" name="email" class="form-control" id="emailInput">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="passInput" class="form-label">Password</label>
+                                    <input type="password" name="password" class="form-control" id="passInput">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="saltInput" class="form-label">bank account</label>
+                                    <input type="number" name="bank_account" class="form-control" id="saltInput">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="saltInput" class="form-label">commercial</label>
+                                    <input type="number" name="commercial" class="form-control" id="saltInput">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="saltInput" class="form-label">tax number</label>
+                                    <input type="number" name="tax_number" class="form-control" id="saltInput">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="saltInput" class="form-label">personal id</label>
+                                    <input type="number" name="personal_id" class="form-control" id="saltInput">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
                     <div class="card p-4">
-                        <h4 class="card-title">Login</h4>
+                        <h4 class="card-title">Login User</h4>
                         <div class="card-body">
                             <form action="{{ route('login') }}" method="POST">
                                 @csrf
+                                <input type="hidden" name="type" value="user">
                                 <div class="mb-3">
                                     <label for="emailInput" class="form-label">Phone</label>
                                     <input type="text" name="phone" class="form-control" id="emailInput" aria-describedby="emailHelp">
@@ -178,20 +220,79 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="col-md-6">
+                    <div class="card p-4">
+                        <h4 class="card-title">Login Company</h4>
+                        <div class="card-body">
+                            <form action="{{ route('login') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="type" value="company">
+                                <div class="mb-3">
+                                    <label for="emailInput" class="form-label">Email</label>
+                                    <input type="email" name="email" class="form-control" id="emailInput" aria-describedby="emailHelp">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="passInput" class="form-label">Password</label>
+                                    <input type="password" name="password" class="form-control" id="passInput">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="col-md-6 mt-4">
                     <div class="card p-4">
-                        <h4 class="card-title">Generate</h4>
+                        <h4 class="card-title">Otp</h4>
+                        <div class="card-body">
+                            <form action="{{ route('getOtp') }}" method="POST">
+                                @csrf
+                                <div class="mb-3">
+                                    <label for="emailInput" class="form-label">ID</label>
+                                    <input type="text" name="user_id" class="form-control" id="emailInput" aria-describedby="emailHelp">
+                                    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="emailInput" class="form-label">Otp</label>
+                                    <input type="text" name="otp_num" class="form-control" id="emailInput" aria-describedby="emailHelp">
+                                    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mt-4">
+                    <div class="card p-4">
+                        <h4 class="card-title">Delete Otp</h4>
+                        <div class="card-body">
+                            <form action="{{ route('deleteOtp') }}" method="POST">
+                                @csrf
+                                <div class="mb-3">
+                                    <label for="emailInput" class="form-label">user ID</label>
+                                    <input type="text" name="user_id" class="form-control" id="emailInput" aria-describedby="emailHelp">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mt-4">
+                    <div class="card p-4">
+                        <h4 class="card-title">Generate pass</h4>
                         <div class="card-body">
                             <form action="{{ route('generate') }}" method="POST">
                                 @csrf
                                 <div class="mb-3">
                                     <label for="emailInput" class="form-label">Text</label>
                                     <input type="text" name="text" class="form-control" id="emailInput" aria-describedby="emailHelp">
-                                    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="passInput" class="form-label">Numaber</label>
-                                    <input type="number" name="number" class="form-control" id="passInput">
+                                    <label for="emailInput" class="form-label">Number</label>
+                                    <input type="text" name="number" class="form-control" id="emailInput" aria-describedby="emailHelp">
                                 </div>
                                 <button type="submit" class="btn btn-primary">Submit</button>
                             </form>

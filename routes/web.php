@@ -1,11 +1,16 @@
 <?php
 
+
+use Google\Cloud\Core\Timestamp;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Route;
+use phpseclib3\Crypt\PublicKeyLoader;
+use App\Http\Controllers\OtpController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UsersController;
-use Illuminate\Support\Facades\Route;
-use Kreait\Laravel\Firebase\Facades\Firebase;
 use Google\Cloud\Firestore\FirestoreClient;
-use Illuminate\Support\Facades\Hash;
+use Kreait\Laravel\Firebase\Facades\Firebase;
+use phpseclib3\Crypt\RSA;
 
 /*
 |--------------------------------------------------------------------------
@@ -84,9 +89,44 @@ Route::get('/', function () {
     // dd($password , $id);
 });
 
+Route::get('/test', function () {
+    // $company = new \App\Models\Company();
+    // $payments = $company->payments('1c4e987159cf4cb4b763');
+    // $stamp = new Timestamp( new \DateTime('now') );
+
+    // dd($payments , $stamp);
+    // $receipt = new \App\Models\Receipt();
+    // $payment = $receipt->payment('DhBnC9FvdL4JiBNKEfgN');
+    // dd($payment);
+    // $publicKey = RSA::createKey(1024, 10);
+    // $privateKey = RSA::createKey(1024, 10);
+    // $loader = PublicKeyLoader::load($publicKey);
+    // //save key to storage
+    // $loader->saveToAsciiFile('public.key');
+    // dd($loader);
+    // create public key
+    $private_key = file_get_contents(storage_path('app/private.key'));
+    $key = RSA::loadPrivateKey($private_key);
+    // $key->setPublicKey(file_get_contents(storage_path('app/public.key')));
+    // $key->setPrivateKey(file_get_contents(storage_path('app/private.key')));
+    $text = 'HyM/159F42+Ym2Eh5hNljem/a6+E+9pFfwMu98npdlQWnl3gyGivYjtNUG4VwvJAWwRnudcCZLzh/pGKHL5Vmg==';
+    $decrypted = $key->decrypt($text);
+    dd($decrypted);
+});
+
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
-Route::post('/generate', [AuthController::class, 'generate'])->name('generate');
+
+Route::post('/getOtp', [OtpController::class, 'check'])->name('getOtp');
+Route::post('/deleteOtp', [OtpController::class, 'destroyOtp'])->name('deleteOtp');
+
+Route::post('/generate', [AuthController::class, 'generatePassword'])->name('generate');
+
+Route::get('/charge_wallet', function () {
+    return view('charge_wallet');
+});
+Route::post('/charge_wallet', [UsersController::class, 'chargeWallet'])->name('charge_wallet');
+
 
 
 // Route::get('/users' , [ UsersController::class, 'index' ]);

@@ -2,9 +2,11 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\OtpController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\PaymentsController;
+use App\Http\Controllers\CompaniesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,3 +34,9 @@ Route::post('/payments', [PaymentsController::class, 'store']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
+Route::get('/otps', [OtpController::class, 'index']);
+Route::post('/checkOtp', [OtpController::class, 'check']);
+Route::post('/destroyOtp', [OtpController::class, 'destroy']);
+
+Route::get('/companies', [CompaniesController::class, 'index']);
+Route::get('/companies/{id}/payments', [CompaniesController::class, 'payments']);

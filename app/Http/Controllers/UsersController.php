@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Wallet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -80,34 +81,40 @@ class UsersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $data = $request->all();
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:25',
-            'password' => 'required|string',
-            'uniq_id' => 'required|string'
-        ]);
-        $user = new User();
-        $updateUser = $user->edit($id, $data);
-        if ($updateUser)
-            return $updateUser;
-        else
-            return response()->json(['error' => 'Something went wrong'], 500);
-    }
+        $clients = new User();
+        $wallets = new Wallet();
 
-    /**
-     * get all payments of user
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function payments($id)
-    {
-        $user = new User();
-        $payments = $user->payments($id);
-        if ($payments)
-            return $payments;
-        else
-            return response()->json(['error' => 'User not found'], 404);
+        $request->validate([
+            'phone' => 'required|numeric',
+            'password' => 'required|string',
+            'balance' => 'required|numeric'
+        ]);
+
+        $client = $clients->findByPhone($request->phone);
+
+        if ($client) {
+            $client_data = $client->data();
+            $client_password = $client_data['password'];
+            $request_password = $request->password . $client_data['salt'];
+            if ($client_password == $request_password) {
+                $wallet = $wallets->findByUserId($client->id());
+                $data = [
+                    'client_id' => $client->id(),
+                    'balance' => $request->balance
+                ];
+                $wallets->edit($wallet->id(), $data);
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Wallet updated successfully'
+                ]);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Password is incorrect'
+                ]);
+            }
+        } else {
+            return response()->json(['error' => 'Phone number is incorrect']);
+        }
     }
 }
