@@ -60,6 +60,22 @@ class Wallet extends Model
     }
 
     /**
+     * get wallet by user id
+     * 
+     * @param  int $id
+     * @return array of client
+     */
+    public function findByUserId($id)
+    {
+        $collection = $this->collection->where('user_id', '=', $id);
+        $documents = $collection->documents();
+        if ($documents->rows() != null) {
+            $document = $documents->rows()[0];
+            return $document;
+        }
+    }
+
+    /**
      * create client
      * 
      * @param  array $data
@@ -68,6 +84,20 @@ class Wallet extends Model
     public function create(array $data)
     {
         $document = $this->collection->add($data);
+        return $document->snapshot();
+    }
+
+    /**
+     * update client
+     * 
+     * @param  int $id
+     * @param  array $data
+     * @return array of client
+     */
+    public function edit($id, array $data)
+    {
+        $document = $this->collection->document($id);
+        $document->set($data);
         return $document->snapshot();
     }
 

@@ -33,7 +33,7 @@ class OtpController extends Controller
 
         $otp = new Otp();
         $find_otp = $otp->userOtp($user_id);
-
+        // dd($find_otp);
         if($find_otp){
             if($find_otp == $otp_num){
                 $this->destroy($request);

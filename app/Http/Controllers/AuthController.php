@@ -231,4 +231,48 @@ class AuthController extends Controller
         ]);
     }
 
+
+    /**
+     * check password FROM List and return true or false
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function checkPassword(Request $request)
+    {
+        $password = $request->password;
+        $salt = $request->salt;
+        $password_without_salt = str_replace($salt, '', $password);
+
+        ini_set('memory_limit', '2048M');
+        $file = file_get_contents(storage_path('app/hash.txt'));
+        $file = explode("\n", $file);
+        foreach ($file as $line) {
+            if ($line == $password_without_salt) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Password is not secure'
+                ]);
+            }
+        }
+    }
+
+    /**
+     * generate password for company
+     * 
+     * @return string 
+     */
+    public function generatePasswordForCompany()
+    {
+        $char = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@$%&_';
+        $password = array();
+        $char_length = strlen($char) - 1;
+
+        for ($i = 0; $i < 16; $i++) {
+            $rand = rand(0, $char_length);
+            $password[] = $char[$rand];
+        }
+        return implode($password);
+    }
+
+
 }

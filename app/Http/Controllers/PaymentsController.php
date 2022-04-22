@@ -111,4 +111,20 @@ class PaymentsController extends Controller
             return response()->json(['error' => 'Payment not found']);
     }
 
+    /**
+     * get all Receipt by payment id.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function paymentReceipt($id)
+    {
+        $payment = new Receipt();
+        $payment = $payment->payment($id);
+        if ($payment)
+            return $payment;
+        else
+            return response()->json(['error' => 'Payment not found']);
+    }
+
 }

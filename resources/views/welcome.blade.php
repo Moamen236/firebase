@@ -209,7 +209,6 @@
                                 <div class="mb-3">
                                     <label for="emailInput" class="form-label">Phone</label>
                                     <input type="text" name="phone" class="form-control" id="emailInput" aria-describedby="emailHelp">
-                                    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
                                 </div>
                                 <div class="mb-3">
                                     <label for="passInput" class="form-label">Password</label>
@@ -293,6 +292,30 @@
                                 <div class="mb-3">
                                     <label for="emailInput" class="form-label">Number</label>
                                     <input type="text" name="number" class="form-control" id="emailInput" aria-describedby="emailHelp">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mt-4">
+                    <div class="card p-4">
+                        <h4 class="card-title">pay with wallet</h4>
+                        <div class="card-body">
+                            <form action="{{ route('pay') }}" method="POST">
+                                @csrf
+                                <div class="mb-3">
+                                    <label for="emailInput" class="form-label">client_id</label>
+                                    <input type="text" name="client_id" class="form-control" id="emailInput" aria-describedby="emailHelp">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="emailInput" class="form-label">password</label>
+                                    <input type="text" name="password" class="form-control" id="emailInput" aria-describedby="emailHelp">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="emailInput" class="form-label">amount</label>
+                                    <input type="text" name="amount" class="form-control" id="emailInput" aria-describedby="emailHelp">
                                 </div>
                                 <button type="submit" class="btn btn-primary">Submit</button>
                             </form>

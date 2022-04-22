@@ -1,6 +1,7 @@
 <?php
 
 
+use phpseclib3\Crypt\RSA;
 use Google\Cloud\Core\Timestamp;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
@@ -9,8 +10,8 @@ use App\Http\Controllers\OtpController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UsersController;
 use Google\Cloud\Firestore\FirestoreClient;
+use App\Http\Controllers\CompaniesController;
 use Kreait\Laravel\Firebase\Facades\Firebase;
-use phpseclib3\Crypt\RSA;
 
 /*
 |--------------------------------------------------------------------------
@@ -90,6 +91,7 @@ Route::get('/', function () {
 });
 
 Route::get('/test', function () {
+
     // $company = new \App\Models\Company();
     // $payments = $company->payments('1c4e987159cf4cb4b763');
     // $stamp = new Timestamp( new \DateTime('now') );
@@ -105,13 +107,39 @@ Route::get('/test', function () {
     // $loader->saveToAsciiFile('public.key');
     // dd($loader);
     // create public key
-    $private_key = file_get_contents(storage_path('app/private.key'));
-    $key = RSA::loadPrivateKey($private_key);
-    // $key->setPublicKey(file_get_contents(storage_path('app/public.key')));
-    // $key->setPrivateKey(file_get_contents(storage_path('app/private.key')));
-    $text = 'HyM/159F42+Ym2Eh5hNljem/a6+E+9pFfwMu98npdlQWnl3gyGivYjtNUG4VwvJAWwRnudcCZLzh/pGKHL5Vmg==';
-    $decrypted = $key->decrypt($text);
-    dd($decrypted);
+    // $private_key = file_get_contents(storage_path('app/private.key'));
+    // $key = RSA::loadPrivateKey($private_key);
+    // // $key->setPublicKey(file_get_contents(storage_path('app/public.key')));
+    // // $key->setPrivateKey(file_get_contents(storage_path('app/private.key')));
+    // $text = 'HyM/159F42+Ym2Eh5hNljem/a6+E+9pFfwMu98npdlQWnl3gyGivYjtNUG4VwvJAWwRnudcCZLzh/pGKHL5Vmg==';
+    // $decrypted = $key->decrypt($text);
+    // dd($decrypted);
+
+    // $contents = file_get_contents(storage_path('app/file.txt')); 
+    // dd($contents);
+    // ini_set('memory_limit', '2048M');
+    // $file = file_get_contents(storage_path('app/rockyou.txt'));
+    // $file = explode("\n", $file);
+    // $array = [];
+    // foreach ($file as $key => $line) {
+    //     $filter = str_replace("\r", '', $line);
+    //     $line_hash = hash('sha256', $filter);
+    //     $array[$key] = $line_hash;
+    // }
+
+    // foreach ($array as $key => $value) {
+    //     $file = fopen(storage_path('app/hash.txt'), 'a');
+    //     fwrite($file, $value . "\n");
+    //     fclose($file);
+    // }
+    // dd('done');
+
+    // generate private key from rsa
+    $private_key = RSA::createKey(1024 , 10);
+    // save private key to storage
+    $private_key = $private_key->privateExponent['value'];
+    dd($private_key);
+
 });
 
 Route::post('/register', [AuthController::class, 'register'])->name('register');
@@ -126,6 +154,15 @@ Route::get('/charge_wallet', function () {
     return view('charge_wallet');
 });
 Route::post('/charge_wallet', [UsersController::class, 'chargeWallet'])->name('charge_wallet');
+
+Route::get('/generate', [AuthController::class, 'generatePasswordForCompany']);
+
+Route::get('/users/payments', [UsersController::class, 'payments']);
+Route::post('/users/pay', [UsersController::class, 'payWithWallet'])->name('pay');
+
+Route::get('/companies_service', [CompaniesController::class, 'findByService']);
+
+
 
 
 

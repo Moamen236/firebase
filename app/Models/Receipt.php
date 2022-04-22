@@ -81,7 +81,10 @@ class Receipt extends Model
         $documents = $this->collection->where('payment_id', '=', $id)->documents();
         if ($documents->rows() != null) {
             $document = $documents->rows()[0];
-            return $document;
+            return [
+                'id' => $document->id(),
+                'data' => $document->data()
+            ];
         }
         return false;
     }
